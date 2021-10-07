@@ -6,9 +6,9 @@ import {
   HttpStatus,
   Logger
 } from "@nestjs/common";
-import { getUrlQuery } from "@src/utils";
-import { CodeEnum, CodeMessage } from "@src/enums/code.enum";
-import { API_AUTH_KEY } from "@src/constants";
+import { getUrlQuery } from "../../utils";
+import { CodeEnum, CodeMessage } from "../../enums/code.enum";
+import { API_AUTH_KEY } from "../../constants";
 import { ApiAuthService } from "@src/modules/shared/services/api-auth/api-auth.service";
 import { AccountTokenEntity } from "@src/modules/admin/system/account/entities/account.token.entity";
 import moment from "moment";
