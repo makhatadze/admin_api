@@ -1,14 +1,16 @@
 import { Injectable } from "@nestjs/common";
-import winston from "winston";
-import DailyRotateFile from "winston-daily-rotate-file";
+import { createLogger, format, Logger, transport, transports } from "winston";
+
+const DailyRotateFile = require("winston-daily-rotate-file");
 import * as path from "path";
 import { IS_DEV } from "@src/main";
 import { isObject } from "@src/utils";
-// eslint-disable-next-line
+
 type ObjectType = Record<string, any>;
+const { combine, timestamp } = format;
 
 const transportsHandler = () => {
-  const transportsList: winston.transport[] = [
+  const transportsList: transport[] = [
     new DailyRotateFile({
       // filename: 'logs/error-%DATE%.log',
       filename: path.join(process.cwd(), "logs", "error-%DATE%.log"),
@@ -33,23 +35,23 @@ const transportsHandler = () => {
     })
   ];
   if (IS_DEV) {
-    transportsList.push(new winston.transports.Console({}));
+    transportsList.push(new transports.Console({}));
   }
   return transportsList;
 };
 
 @Injectable()
 export class LoggerService {
-  private logger: winston.Logger;
+  private logger: Logger;
 
   constructor(fileName = "") {
-    this.logger = winston.createLogger({
+    this.logger = createLogger({
       level: process.env.NODE_ENV != "production" ? "silly" : "info",
-      format: winston.format.combine(
-        winston.format.timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSS" }),
-        winston.format.colorize(),
+      format: combine(
+        timestamp({ format: "YYYY-MM-DD HH:mm:ss.SSS" }),
+        format.colorize(),
         // 自定义输出代码格式
-        winston.format.printf(({ prefix, level, timestamp, message }) => {
+        format.printf(({ prefix, level, timestamp, message }) => {
           return `[${timestamp}] [${level}]【${fileName}】${
             prefix ? `-【${prefix}】` : ""
           } ${message}`;

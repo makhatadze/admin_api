@@ -1,11 +1,18 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, Logger } from "@nestjs/common";
+import {
+  Controller,
+  Post,
+  Body,
+  HttpCode,
+  HttpStatus,
+  Logger
+} from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiOkResponse } from "@nestjs/swagger";
 
 import { LoginService } from "../../services/login/login.service";
 import { LoginDto } from "./dto/login.dto";
-import { IpAddress } from "@src/decorators/ip.address";
+import { IpAddress } from "../../../../../../decorators/ip.address";
 import { LoginVo } from "./vo/login.vo";
-import { LoggerService } from "@src/modules/shared/services/logger/logger.service";
+import { LoggerService } from "../../../../../shared/services/logger/logger.service";
 
 @ApiTags("后台管理系统-用户登录")
 @Controller("login")
@@ -26,7 +33,10 @@ export class LoginController {
   })
   @HttpCode(HttpStatus.OK)
   @Post()
-  async adminLogin(@Body() loginDto: LoginDto, @IpAddress() ipAddress: string): Promise<LoginVo> {
+  async adminLogin(
+    @Body() loginDto: LoginDto,
+    @IpAddress() ipAddress: string
+  ): Promise<LoginVo> {
     this.logger.log("接收的登录参数:", loginDto);
     this.loggerService.info(loginDto, "登录的参数");
     return this.loginService.adminLogin(loginDto, ipAddress);

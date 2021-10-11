@@ -11,7 +11,12 @@ import { RoleAccessEntity } from "../admin/system/role/entities/role.access.enti
 @Global()
 @Module({
   imports: [
-    TypeOrmModule.forFeature([AccountEntity, AccessEntity, AccountRoleEntity, RoleAccessEntity])
+    TypeOrmModule.forFeature([
+      AccountEntity,
+      AccessEntity,
+      AccountRoleEntity,
+      RoleAccessEntity
+    ])
   ],
   providers: [ToolsService, InitDbService, ApiAuthService],
   exports: [ToolsService, ApiAuthService]

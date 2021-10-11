@@ -65,6 +65,6 @@ import { ValidationPipe } from "./pipe/validation/validation.pipe";
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor
     }
-  ]
+  ],
 })
 export class AppModule {}

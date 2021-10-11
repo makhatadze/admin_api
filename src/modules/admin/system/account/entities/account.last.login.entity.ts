@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert } from "typeorm";
-import { IpToAddressService } from "@src/modules/common/tencent-map/ip-to-address/ip-to-address.service";
+import { IpToAddressService } from "../../../../common/tencent-map/ip-to-address/ip-to-address.service";
 
 @Entity("account_last_login")
 export class AccountLastLoginEntity {
@@ -49,7 +49,9 @@ export class AccountLastLoginEntity {
     // 调用第三方,根据ip地址查询到地址
     const ipToAddressService = new IpToAddressService();
     if (this.lastLoginIp) {
-      this.lastLoginAddress = await ipToAddressService.IpToAddress(this.lastLoginIp);
+      this.lastLoginAddress = await ipToAddressService.IpToAddress(
+        this.lastLoginIp
+      );
     }
   }
 }

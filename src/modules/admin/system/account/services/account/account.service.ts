@@ -5,14 +5,17 @@ import { Repository, getConnection, ILike, Equal } from "typeorm";
 
 import { AccountEntity } from "../../entities/account.entity";
 import { CreateAccountDto } from "../../controllers/account/dto/create.account.dto";
-import adminConfig from "@src/config/admin.config";
+import adminConfig from "../../../../../../config/admin.config";
 import { usernameReg } from "@src/constants";
 import { UpdateAccountDto } from "../../controllers/account/dto/update.account.dto";
 import { ModifyPasswordDto } from "../../controllers/account/dto/modify.password.dto";
 import { ToolsService } from "@src/modules/shared/services/tools/tools.service";
-import { AccountListVo, AccountVo } from "../../controllers/account/vo/account.vo";
+import {
+  AccountListVo,
+  AccountVo
+} from "../../controllers/account/vo/account.vo";
 import { AccountReqDto } from "../../controllers/account/dto/account.req.dto";
-import { PageEnum, StatusEnum, PlatformEnum } from "@src/enums";
+import { PageEnum, StatusEnum, PlatformEnum } from "../../../../../../enums";
 import { AccountLastLoginEntity } from "../../entities/account.last.login.entity";
 import { mapToObj } from "@src/utils";
 
@@ -46,12 +49,13 @@ export class AccountService {
       queryConditionList.push("account.mobile = :mobile");
     }
     const queryCondition = queryConditionList.join(" OR ");
-    const findAccount: Pick<AccountEntity, "username" | "email" | "mobile"> | undefined =
-      await getConnection()
-        .createQueryBuilder(AccountEntity, "account")
-        .select(["account.username", "account.email", "account.mobile"])
-        .andWhere(queryCondition, { username, email, mobile })
-        .getOne();
+    const findAccount:
+      | Pick<AccountEntity, "username" | "email" | "mobile">
+      | undefined = await getConnection()
+      .createQueryBuilder(AccountEntity, "account")
+      .select(["account.username", "account.email", "account.mobile"])
+      .andWhere(queryCondition, { username, email, mobile })
+      .getOne();
     if (findAccount) {
       const { username, email, mobile } = findAccount;
       if (usernameReg.test(username)) {
@@ -125,18 +129,25 @@ export class AccountService {
    * @param {ModifyPasswordDto} modifyPasswordDto
    * @return {*}
    */
-  async modifyPassWordById(id: number, modifyPasswordDto: ModifyPasswordDto): Promise<string> {
+  async modifyPassWordById(
+    id: number,
+    modifyPasswordDto: ModifyPasswordDto
+  ): Promise<string> {
     if (id === 1) {
       throw new HttpException("系统默认生成的账号不能修改密码", HttpStatus.OK);
     }
     const { password, newPassword } = modifyPasswordDto;
-    const findResult: Pick<AccountEntity, "password"> = await getConnection()
-      .createQueryBuilder(AccountEntity, "account")
-      .select([])
-      .addSelect("account.password", "password")
-      .where("(account.id = :id)", { id })
-      .getRawOne();
-    if (findResult?.password && this.toolsService.checkPassword(password, findResult?.password)) {
+    const findResult: Pick<AccountEntity, "password"> | undefined =
+      await getConnection()
+        .createQueryBuilder(AccountEntity, "account")
+        .select([])
+        .addSelect("account.password", "password")
+        .where("(account.id = :id)", { id })
+        .getRawOne();
+    if (
+      findResult?.password &&
+      this.toolsService.checkPassword(password, findResult?.password)
+    ) {
       const {
         raw: { affectedRows }
       } = await this.accountRepository.update(id, {
@@ -148,7 +159,10 @@ export class AccountService {
         return "修改失败";
       }
     } else {
-      throw new HttpException("你输入的旧密码错误或输入的账号id不存在", HttpStatus.OK);
+      throw new HttpException(
+        "你输入的旧密码错误或输入的账号id不存在",
+        HttpStatus.OK
+      );
     }
   }
 
@@ -161,12 +175,16 @@ export class AccountService {
    * @param {UpdateAccountDto} updateAccountDto
    * @return {*}
    */
-  async modifyById(id: number, updateAccountDto: UpdateAccountDto): Promise<string> {
+  async modifyById(
+    id: number,
+    updateAccountDto: UpdateAccountDto
+  ): Promise<string> {
     if (id === 1) {
       throw new HttpException("系统默认生成的账号不能修改信息", HttpStatus.OK);
     }
     const { username, email, mobile, status, platform } = updateAccountDto;
-    const result: AccountEntity | undefined = await this.accountRepository.findOne(id);
+    const result: AccountEntity | undefined =
+      await this.accountRepository.findOne(id);
     await this.accountRepository.save(
       Object.assign(result, { username, email, mobile, status, platform })
     );
@@ -216,7 +234,11 @@ export class AccountService {
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))) {
       query.set("status", Equal(status));
     }
-    if ([PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(Number(platform))) {
+    if (
+      [PlatformEnum.ADMIN_PLATFORM, PlatformEnum.MERCHANT_PLATFORM].includes(
+        Number(platform)
+      )
+    ) {
       query.set("platform", Equal(platform));
     }
     const data: AccountVo[] = await getConnection()

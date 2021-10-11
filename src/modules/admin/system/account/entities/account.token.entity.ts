@@ -1,5 +1,5 @@
-import { PlatformEnum } from "@src/enums";
-import { SharedEntity } from "@src/modules/shared/entities/shared.entity";
+import { PlatformEnum } from "../../../../../enums";
+import { SharedEntity } from "../../../../shared/entities/shared.entity";
 import { Column, Entity } from "typeorm";
 
 @Entity("account_token")

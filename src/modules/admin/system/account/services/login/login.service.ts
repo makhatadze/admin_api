@@ -6,7 +6,6 @@ import { Repository, getConnection, SelectQueryBuilder } from "typeorm";
 import { ToolsService } from "@src/modules/shared/services/tools/tools.service";
 import { isMobilePhone, isEmail } from "class-validator";
 import { AccountLastLoginEntity } from "../../entities/account.last.login.entity";
-import { LoginVo } from "../../controllers/login/vo/login.vo";
 import { AccountTokenEntity } from "../../entities/account.token.entity";
 import { ConfigService, InjectConfig } from "nestjs-config";
 import moment from "moment";
@@ -57,10 +56,23 @@ export class LoginService {
    * @param {string} ipAddress
    * @return {*}
    */
-  async adminLogin(loginDto: LoginDto, ipAddress: string): Promise<LoginVo> {
+  async adminLogin(
+    loginDto: LoginDto,
+    ipAddress: string
+  ): Promise<{
+    isSuper: number;
+    mobile: string;
+    id: number;
+    email: string;
+    platform: number;
+    token: string;
+    username: string;
+  }> {
     try {
       const { username, password } = loginDto;
-      type TypeAccountFindResult = Extract<AccountEntity, ICurrentUserType> | undefined;
+      type TypeAccountFindResult =
+        | Extract<AccountEntity, ICurrentUserType>
+        | undefined;
       let findAccount: TypeAccountFindResult;
       const queryBuilder = this.queryLoginBuilder;
       // 根据手机号码查询
@@ -105,7 +117,9 @@ export class LoginService {
           platform,
           token,
           // 设置token失效时间
-          expireTime: moment().add(tokenExpire, "day").format("YYYY-MM-DD HH:mm:ss")
+          expireTime: moment()
+            .add(tokenExpire, "day")
+            .format("YYYY-MM-DD HH:mm:ss")
         };
         // 先判断之前是否有记录，有记录就更新，没记录就创建
         const accountTokenResult: Pick<AccountTokenEntity, "id"> | undefined =
@@ -114,7 +128,10 @@ export class LoginService {
             select: ["id"]
           });
         if (accountTokenResult?.id) {
-          await this.accountTokenRepository.update({ id: accountTokenResult.id }, accountToken);
+          await this.accountTokenRepository.update(
+            { id: accountTokenResult.id },
+            accountToken
+          );
         } else {
           const accountTokenSave: AccountTokenEntity =
             this.accountTokenRepository.create(accountToken);

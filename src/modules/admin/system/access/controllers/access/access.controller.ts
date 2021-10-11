@@ -12,14 +12,19 @@ import {
   Get,
   Query
 } from "@nestjs/common";
-import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from "@nestjs/swagger";
-import { AuthGuard } from "@src/guard/auth/auth.guard";
+import {
+  ApiTags,
+  ApiBearerAuth,
+  ApiOperation,
+  ApiOkResponse
+} from "@nestjs/swagger";
+import { AuthGuard } from "../../../../../../guard/auth/auth.guard";
 import { AccessService } from "../../services/access/access.service";
 import { CreateAccessDto } from "./dto/create.access.dto";
 import { UpdateAccessDto } from "./dto/update.access.dto";
 import { AccessListVo, AccessVo } from "./vo/access.vo";
 import { AccessReqDto } from "./dto/access.req.dto";
-import { ApiAuth } from "@src/decorators/api.auth";
+import { ApiAuth } from "../../../../../../decorators/api.auth";
 
 @ApiTags("后台管理系统-资源管理")
 @ApiBearerAuth()
@@ -37,14 +42,18 @@ export class AccessController {
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async createAccess(@Body() createAccessDto: CreateAccessDto): Promise<string> {
+  async createAccess(
+    @Body() createAccessDto: CreateAccessDto
+  ): Promise<string> {
     return await this.accessService.createAccess(createAccessDto);
   }
 
   @ApiOperation({ summary: "删除资源", description: "根据资源ID删除资源" })
   @Delete(":id")
   @HttpCode(HttpStatus.OK)
-  async destroyAccessById(@Param("id", new ParseIntPipe()) id: number): Promise<string> {
+  async destroyAccessById(
+    @Param("id", new ParseIntPipe()) id: number
+  ): Promise<string> {
     return await this.accessService.destroyAccessById(id);
   }
 
@@ -88,7 +97,9 @@ export class AccessController {
     description: "分页获取资源列表"
   })
   @Get()
-  async accessListPage(@Query() accessReqDto: AccessReqDto): Promise<AccessListVo> {
+  async accessListPage(
+    @Query() accessReqDto: AccessReqDto
+  ): Promise<AccessListVo> {
     return await this.accessService.accessListPage(accessReqDto);
   }
 }

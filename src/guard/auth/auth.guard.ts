@@ -7,12 +7,12 @@ import {
   Logger
 } from "@nestjs/common";
 import { getUrlQuery } from "../../utils";
-import { CodeEnum, CodeMessage } from "../../enums/code.enum";
+import { CodeEnum, CodeMessage } from "../../enums";
 import { API_AUTH_KEY } from "../../constants";
-import { ApiAuthService } from "@src/modules/shared/services/api-auth/api-auth.service";
-import { AccountTokenEntity } from "@src/modules/admin/system/account/entities/account.token.entity";
+import { ApiAuthService } from "../../modules/shared/services/api-auth/api-auth.service";
+import { AccountTokenEntity } from "../../modules/admin/system/account/entities/account.token.entity";
 import moment from "moment";
-import { ICurrentUserType } from "@src/decorators/current.user";
+import { ICurrentUserType } from "../../decorators/current.user";
 
 @Injectable()
 export class AuthGuard implements CanActivate {

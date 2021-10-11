@@ -1,4 +1,4 @@
-import { RoleEntity } from "./../../../role/entities/role.entity";
+import { RoleEntity } from "../../../role/entities/role.entity";
 import { Injectable, HttpException, HttpStatus, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { AccountRoleEntity } from "../../entities/account.role.entity";
@@ -27,7 +27,9 @@ export class AccountRoleService {
    * @param {number} accountId
    * @return {*}
    */
-  async accountRoleListByAccountId(accountId: number): Promise<AccountRoleListVo[] | undefined> {
+  async accountRoleListByAccountId(
+    accountId: number
+  ): Promise<AccountRoleListVo[] | undefined> {
     return await this.accountRoleRepository.find({
       where: { accountId },
       select: ["id", "roleId"]
@@ -42,19 +44,21 @@ export class AccountRoleService {
    * @param {DistributionRoleDto} distributionRoleDto
    * @return {*}
    */
-  async distributionRole(distributionRoleDto: DistributionRoleDto): Promise<string> {
+  async distributionRole(
+    distributionRoleDto: DistributionRoleDto
+  ): Promise<string> {
     const { accountId, roleList } = distributionRoleDto;
     return getManager()
       .transaction(async (entityManager: EntityManager) => {
-        await entityManager.delete<AccountRoleEntity>(AccountRoleEntity, { accountId });
+        await entityManager.delete<AccountRoleEntity>(AccountRoleEntity, {
+          accountId
+        });
         for (const item of roleList) {
-          const result: AccountRoleEntity = entityManager.create<AccountRoleEntity>(
-            AccountRoleEntity,
-            {
+          const result: AccountRoleEntity =
+            entityManager.create<AccountRoleEntity>(AccountRoleEntity, {
               accountId,
               roleId: item
-            }
-          );
+            });
           await entityManager.save(result);
         }
       })
@@ -63,7 +67,10 @@ export class AccountRoleService {
       })
       .catch((e: HttpException) => {
         this.logger.error("给账号分配角色错误", e.message);
-        throw new HttpException(`给账号分配角色失败:${e.message}`, HttpStatus.OK);
+        throw new HttpException(
+          `给账号分配角色失败:${e.message}`,
+          HttpStatus.OK
+        );
       });
   }
 

@@ -12,16 +12,24 @@ import {
   HttpStatus,
   HttpCode
 } from "@nestjs/common";
-import { ApiOperation, ApiTags, ApiBearerAuth, ApiOkResponse } from "@nestjs/swagger";
+import {
+  ApiOperation,
+  ApiTags,
+  ApiBearerAuth,
+  ApiOkResponse
+} from "@nestjs/swagger";
 import { CreateAccountDto } from "./dto/create.account.dto";
 import { AccountService } from "../../services/account/account.service";
 import { UpdateAccountDto } from "./dto/update.account.dto";
 import { ModifyPasswordDto } from "./dto/modify.password.dto";
-import { AuthGuard } from "@src/guard/auth/auth.guard";
+import { AuthGuard } from "../../../../../../guard/auth/auth.guard";
 import { AccountVo, AccountListVo } from "./vo/account.vo";
 import { AccountReqDto } from "./dto/account.req.dto";
-import { CurrentUser, ICurrentUserType } from "@src/decorators/current.user";
-import { ApiAuth } from "@src/decorators/api.auth";
+import {
+  CurrentUser,
+  ICurrentUserType
+} from "../../../../../../decorators/current.user";
+import { ApiAuth } from "../../../../../../decorators/api.auth";
 
 @ApiTags("后台管理系统-账号管理")
 @ApiBearerAuth()
@@ -42,11 +50,16 @@ export class AccountController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<string> {
+  async createAccount(
+    @Body() createAccountDto: CreateAccountDto
+  ): Promise<string> {
     return await this.accountService.createAccount(createAccountDto);
   }
 
-  @ApiOperation({ summary: "重置为默认密码", description: "根据id重置默认密码" })
+  @ApiOperation({
+    summary: "重置为默认密码",
+    description: "根据id重置默认密码"
+  })
   @ApiOkResponse({ type: String, description: "重置密码返回值" })
   @HttpCode(HttpStatus.OK)
   @Post("reset_password")
@@ -77,11 +90,16 @@ export class AccountController {
   })
   @HttpCode(HttpStatus.OK)
   @Delete(":id")
-  async destroyById(@Param("id", new ParseIntPipe()) id: number): Promise<string> {
+  async destroyById(
+    @Param("id", new ParseIntPipe()) id: number
+  ): Promise<string> {
     return await this.accountService.destroyById(id);
   }
 
-  @ApiOperation({ summary: "修改账号信息", description: "根据账号id修改账号信息" })
+  @ApiOperation({
+    summary: "修改账号信息",
+    description: "根据账号id修改账号信息"
+  })
   @ApiOkResponse({
     type: String,
     description: "修改账号返回值"
@@ -95,14 +113,19 @@ export class AccountController {
     return await this.accountService.modifyById(id, updateAccountDto);
   }
 
-  @ApiOperation({ summary: "查询账号信息", description: "根据账号id查询账号信息" })
+  @ApiOperation({
+    summary: "查询账号信息",
+    description: "根据账号id查询账号信息"
+  })
   @ApiOkResponse({
     type: AccountVo,
     description: "查询单条账号返回值"
   })
   @HttpCode(HttpStatus.OK)
   @Get(":id")
-  async accountById(@Param("id", new ParseIntPipe()) id: number): Promise<AccountVo | undefined> {
+  async accountById(
+    @Param("id", new ParseIntPipe()) id: number
+  ): Promise<AccountVo | undefined> {
     return await this.accountService.accountById(id);
   }
 
@@ -119,7 +142,9 @@ export class AccountController {
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListVo> {
+  async accountList(
+    @Query() accountReqDto: AccountReqDto
+  ): Promise<AccountListVo> {
     return await this.accountService.accountList(accountReqDto);
   }
 }

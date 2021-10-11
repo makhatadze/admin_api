@@ -1,9 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { AccountEntity } from "@src/modules/admin/system/account/entities/account.entity";
+import { AccountEntity } from "../../../admin/system/account/entities/account.entity";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { AccessEntity } from "@src/modules/admin/system/access/entities/access.entity";
-import adminConfig from "@src/config/admin.config";
+import { AccessEntity } from "../../../admin/system/access/entities/access.entity";
+import adminConfig from "../../../../config/admin.config";
 
 @Injectable()
 export class InitDbService {
@@ -32,9 +32,15 @@ export class InitDbService {
   private async initAccount(): Promise<void> {
     const username: string = adminConfig.defaultAccount;
     const password: string = adminConfig.defaultPassword;
-    const isExist = await this.accountRepository.findOne({ where: { username } });
+    const isExist = await this.accountRepository.findOne({
+      where: { username }
+    });
     if (!isExist) {
-      const account = this.accountRepository.create({ username, password, isSuper: 1 });
+      const account = this.accountRepository.create({
+        username,
+        password,
+        isSuper: 1
+      });
       await this.accountRepository.save(account);
     }
   }

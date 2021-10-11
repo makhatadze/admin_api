@@ -1,6 +1,6 @@
 import { IsString, IsNotEmpty } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEqual } from "@src/validators";
+import { IsEqual } from "../../../../../../../validators";
 
 export class ModifyPasswordDto {
   @ApiProperty({ required: true, description: "旧密码" })

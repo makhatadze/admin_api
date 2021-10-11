@@ -7,9 +7,9 @@ import { UpdateRoleDto } from "../../controllers/role/dto/update.role.dto";
 import { RoleListVo, RoleVo } from "../../controllers/role/vo/role.vo";
 import { RoleReqDto } from "../../controllers/role/dto/role.req.dto";
 import { PageEnum, StatusEnum } from "../../../../../../enums";
-import { RoleEnum } from "../../../../../../enums";
+import { RoleEnum } from "@src/enums";
 import { AccountRoleEntity } from "../../../account/entities/account.role.entity";
-import { mapToObj } from "../../../../../../utils";
+import { mapToObj } from "@src/utils";
 
 @Injectable()
 export class RoleService {

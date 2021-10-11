@@ -10,7 +10,10 @@ export class UpdateAccessDto extends AccessDto {
       "Node type, Indicates the top-level module of the module: 1, Represents the menu: 2, Represents the menu(API): 3",
     enum: [1, 2, 3]
   })
-  @IsEnum({ MODULE: 1, MENU: 2, OPERATE: 3 }, { message: "The resource type must be one of 1, 2, 3" })
+  @IsEnum(
+    { MODULE: 1, MENU: 2, OPERATE: 3 },
+    { message: "The resource type must be one of 1, 2, 3" }
+  )
   @IsInt({ message: "Node type must be an integer" })
   @Type(() => Number)
   @ValidateIf((o) => o.moduleName != "")
