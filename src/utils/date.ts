@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 /**
  *
@@ -7,9 +7,9 @@ import moment from "moment";
  */
 export const formatDate = (dateNum: string | number, isDue = false): string => {
   if (isDue) {
-    return moment(dateNum).format("YYYY-MM-DD HH:mm:ss");
+    return moment(dateNum).format('YYYY-MM-DD HH:mm:ss');
   } else {
-    return moment(dateNum).format("YYYY-MM-DD HH:mm:ss");
+    return moment(dateNum).format('YYYY-MM-DD HH:mm:ss');
   }
 };
 
@@ -17,7 +17,7 @@ export const formatDate = (dateNum: string | number, isDue = false): string => {
  * @param date
  */
 export const getDay = (date: Date = new Date()): string => {
-  return moment(date).format("YYYYMMDD");
+  return moment(date).format('YYYYMMDD');
 };
 
 export const getTime = (): number => {
@@ -29,7 +29,7 @@ export const getTime = (): number => {
  */
 export const birthdayYear = (date: Date): string | null => {
   try {
-    return date ? `${moment().diff(date, "years")}` : null;
+    return date ? `${moment().diff(date, 'years')}` : null;
   } catch (e) {
     console.log(e);
     return null;

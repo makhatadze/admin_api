@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryListVo {
-  @ApiProperty({ description: "Total pages" })
+  @ApiProperty({ description: 'Total pages' })
   total: number;
 
-  @ApiProperty({ description: "Page number" })
+  @ApiProperty({ description: 'Page number' })
   pageSize: number;
 
-  @ApiProperty({ description: "Current page" })
+  @ApiProperty({ description: 'Current page' })
   pageNumber: number;
 }

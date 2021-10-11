@@ -4,11 +4,11 @@ import {
   PipeTransform,
   Logger,
   HttpException,
-  HttpStatus
-} from "@nestjs/common";
-import { validate } from "class-validator";
-import { plainToClass } from "class-transformer";
-import { values } from "lodash";
+  HttpStatus,
+} from '@nestjs/common';
+import { validate } from 'class-validator';
+import { plainToClass } from 'class-transformer';
+import { values } from 'lodash';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform<any> {
@@ -21,7 +21,7 @@ export class ValidationPipe implements PipeTransform<any> {
     // 将对象转换为 Class 来验证
     const object = plainToClass(metatype, value);
     const errors = await validate(object);
-    Logger.log(errors, "validation.pipe处理");
+    Logger.log(errors, 'validation.pipe处理');
     if (errors.length > 0) {
       // 遍历全部的错误信息,返回给前端
       // const errorMessage = errors.map(item => {

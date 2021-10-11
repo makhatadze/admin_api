@@ -1,8 +1,7 @@
-import { Module } from "@nestjs/common";
-import { IpToAddressService } from "./ip-to-address/ip-to-address.service";
+import { Module } from '@nestjs/common';
+import { IpToAddressService } from './ip-to-address/ip-to-address.service';
 
 @Module({
-  providers: [IpToAddressService]
+  providers: [IpToAddressService],
 })
-export class TencentMapModule {
-}
+export class TencentMapModule {}

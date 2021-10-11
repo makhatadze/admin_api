@@ -10,7 +10,7 @@ export enum PlatformEnum {
 
 /** Platform text */
 export const PlatformMessage = {
-  0: "Ordinary personnel",
-  1: "Operation Management Platform",
-  2: "Check into the merchant platform"
+  0: 'Ordinary personnel',
+  1: 'Operation Management Platform',
+  2: 'Check into the merchant platform',
 };

@@ -1,16 +1,16 @@
-import { Injectable, HttpException, HttpStatus, Logger } from "@nestjs/common";
-import { LoginDto } from "../../controllers/login/dto/login.dto";
-import { AccountEntity } from "../../entities/account.entity";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, getConnection, SelectQueryBuilder } from "typeorm";
-import { ToolsService } from "@src/modules/shared/services/tools/tools.service";
-import { isMobilePhone, isEmail } from "class-validator";
-import { AccountLastLoginEntity } from "../../entities/account.last.login.entity";
-import { AccountTokenEntity } from "../../entities/account.token.entity";
-import { ConfigService, InjectConfig } from "nestjs-config";
-import moment from "moment";
-import { usernameReg } from "@src/constants";
-import { ICurrentUserType } from "@src/decorators/current.user";
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
+import { LoginDto } from '../../controllers/login/dto/login.dto';
+import { AccountEntity } from '../../entities/account.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, getConnection, SelectQueryBuilder } from 'typeorm';
+import { ToolsService } from '@src/modules/shared/services/tools/tools.service';
+import { isMobilePhone, isEmail } from 'class-validator';
+import { AccountLastLoginEntity } from '../../entities/account.last.login.entity';
+import { AccountTokenEntity } from '../../entities/account.token.entity';
+import { ConfigService, InjectConfig } from 'nestjs-config';
+import moment from 'moment';
+import { usernameReg } from '@src/constants';
+import { ICurrentUserType } from '@src/decorators/current.user';
 
 @Injectable()
 export class LoginService {
@@ -23,42 +23,34 @@ export class LoginService {
     private readonly accountTokenRepository: Repository<AccountTokenEntity>,
     private readonly toolsService: ToolsService,
     @InjectConfig()
-    private readonly configService: ConfigService
-  ) {
-  }
+    private readonly configService: ConfigService,
+  ) {}
 
   /**
-   * @Author: 水痕
-   * @Date: 2021-07-26 09:07:15
-   * @LastEditors: 水痕
-   * @Description: 公共的查询部分
-   * @param {*}
+   * @Description: Public query part
    * @return {*}
    */
   private get queryLoginBuilder(): SelectQueryBuilder<AccountEntity> {
     return getConnection()
-      .createQueryBuilder(AccountEntity, "account")
-      .select("account.id", "id")
-      .addSelect("account.username", "username")
-      .addSelect("account.mobile", "mobile")
-      .addSelect("account.email", "email")
-      .addSelect("account.platform", "platform")
-      .addSelect("account.isSuper", "isSuper")
-      .addSelect("account.password", "password");
+      .createQueryBuilder(AccountEntity, 'account')
+      .select('account.id', 'id')
+      .addSelect('account.username', 'username')
+      .addSelect('account.mobile', 'mobile')
+      .addSelect('account.email', 'email')
+      .addSelect('account.platform', 'platform')
+      .addSelect('account.isSuper', 'isSuper')
+      .addSelect('account.password', 'password');
   }
 
   /**
-   * @Author: 水痕
-   * @Date: 2021-03-22 11:57:32
-   * @LastEditors: 水痕
-   * @Description: 后台管理用户登录
+   * @Description: Backstage management user login
    * @param {LoginDto} loginDto
    * @param {string} ipAddress
    * @return {*}
    */
   async adminLogin(
     loginDto: LoginDto,
-    ipAddress: string
+    ipAddress: string,
   ): Promise<{
     isSuper: number;
     mobile: string;
@@ -70,25 +62,23 @@ export class LoginService {
   }> {
     try {
       const { username, password } = loginDto;
-      type TypeAccountFindResult =
-        | Extract<AccountEntity, ICurrentUserType>
-        | undefined;
+      type TypeAccountFindResult = Extract<AccountEntity, ICurrentUserType> | undefined;
       let findAccount: TypeAccountFindResult;
       const queryBuilder = this.queryLoginBuilder;
-      // 根据手机号码查询
-      if (isMobilePhone(username, "zh-CN")) {
+      // According to mobile phone number
+      if (isMobilePhone(username, 'zh-CN')) {
         findAccount = await queryBuilder
-          .where("(account.mobile = :mobile)", { mobile: username })
+          .where('(account.mobile = :mobile)', { mobile: username })
           .getRawOne();
       } else if (isEmail(username)) {
-        // 根据邮箱查询
+        // Query by email
         findAccount = await queryBuilder
-          .where("(account.email = :email)", { email: username })
+          .where('(account.email = :email)', { email: username })
           .getRawOne();
       } else {
-        // 用户名查询
+        // Username query
         findAccount = await queryBuilder
-          .where("(account.username = :username)", { username })
+          .where('(account.username = :username)', { username })
           .getRawOne();
       }
       if (
@@ -96,18 +86,18 @@ export class LoginService {
         findAccount.password &&
         this.toolsService.checkPassword(password, findAccount.password)
       ) {
-        // 记录最后登录时间和ip地址
+        // Record the last login time and ip address
         const lastLogin = this.accountLastLoginRepository.create({
           accountId: findAccount.id,
-          lastLoginIp: ipAddress
+          lastLoginIp: ipAddress,
         });
         await this.accountLastLoginRepository.save(lastLogin);
-        this.logger.log("当前用户", findAccount);
-        // 生成token存储到token表中并且返回给前端
+        this.logger.log('Current user', findAccount);
+        // Generate the token, store it in the token table and return it to the front end
         const token = this.toolsService.uuidToken;
         const { id, username, email, mobile, isSuper, platform } =
           this.filterAccountField(findAccount);
-        const tokenExpire: number = this.configService.get("admin.tokenExpire");
+        const tokenExpire: number = this.configService.get('admin.tokenExpire');
         const accountToken = {
           userId: id,
           username,
@@ -116,22 +106,17 @@ export class LoginService {
           isSuper,
           platform,
           token,
-          // 设置token失效时间
-          expireTime: moment()
-            .add(tokenExpire, "day")
-            .format("YYYY-MM-DD HH:mm:ss")
+          // Set token expiration time
+          expireTime: moment().add(tokenExpire, 'day').format('YYYY-MM-DD HH:mm:ss'),
         };
-        // 先判断之前是否有记录，有记录就更新，没记录就创建
-        const accountTokenResult: Pick<AccountTokenEntity, "id"> | undefined =
+        // First judge whether there is a record before, update if there is a record, and create if there is no record
+        const accountTokenResult: Pick<AccountTokenEntity, 'id'> | undefined =
           await this.accountTokenRepository.findOne({
             where: { userId: id },
-            select: ["id"]
+            select: ['id'],
           });
         if (accountTokenResult?.id) {
-          await this.accountTokenRepository.update(
-            { id: accountTokenResult.id },
-            accountToken
-          );
+          await this.accountTokenRepository.update({ id: accountTokenResult.id }, accountToken);
         } else {
           const accountTokenSave: AccountTokenEntity =
             this.accountTokenRepository.create(accountToken);
@@ -144,35 +129,32 @@ export class LoginService {
           email,
           mobile,
           isSuper,
-          platform
+          platform,
         };
       } else {
-        throw new HttpException("用户名或密码错误", HttpStatus.OK);
+        throw new HttpException('Wrong user name or password', HttpStatus.OK);
       }
     } catch (e) {
-      this.logger.error("用户名或密码错误", e);
-      throw new HttpException("用户名或密码错误", HttpStatus.OK);
+      this.logger.error('Wrong user name or password', e);
+      throw new HttpException('Wrong user name or password', HttpStatus.OK);
     }
   }
 
   /**
-   * @Author: 水痕
-   * @Date: 2021-07-26 10:15:17
-   * @LastEditors: 水痕
-   * @Description: 过来字段
+   * @Description: Come field
    * @param {ICurrentUserType} accountInfo
    * @return {*}
    */
   private filterAccountField(accountInfo: ICurrentUserType): ICurrentUserType {
     const { username, mobile, email } = accountInfo;
-    const _mobile = isMobilePhone(mobile, "zh-CN") ? mobile : "";
-    const _email = isEmail(email) ? email : "";
-    const _username = usernameReg.test(username) ? username : "";
+    const _mobile = isMobilePhone(mobile, 'zh-CN') ? mobile : '';
+    const _email = isEmail(email) ? email : '';
+    const _username = usernameReg.test(username) ? username : '';
     return {
       ...accountInfo,
       username: _username,
       mobile: _mobile,
-      email: _email
+      email: _email,
     };
   }
 }

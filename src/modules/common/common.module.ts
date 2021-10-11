@@ -1,9 +1,8 @@
-import { Module, Global } from "@nestjs/common";
-import { TencentMapModule } from "./tencent-map/tencent-map.module";
+import { Module, Global } from '@nestjs/common';
+import { TencentMapModule } from './tencent-map/tencent-map.module';
 
 @Global()
 @Module({
-  imports: [TencentMapModule]
+  imports: [TencentMapModule],
 })
-export class CommonModule {
-}
+export class CommonModule {}

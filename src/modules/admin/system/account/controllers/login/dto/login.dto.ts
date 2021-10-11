@@ -1,16 +1,16 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString, IsNotEmpty } from "class-validator";
-import { IsUserName } from "../../../../../../../validators";
+import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsNotEmpty } from 'class-validator';
+import { IsUserName } from '@src/validators';
 
 export class LoginDto {
-  @ApiProperty({ required: true, description: "用户名" })
+  @ApiProperty({ required: true, description: 'Username' })
   @IsUserName()
-  @IsString({ message: "用户名必须为字符类型" })
-  @IsNotEmpty({ message: "用户名不能为空" })
+  @IsString({ message: 'Username must be of character type' })
+  @IsNotEmpty({ message: 'Username can not be empty' })
   readonly username: string;
 
-  @ApiProperty({ required: true, description: "密码" })
-  @IsString({ message: "密码必须为字符串类型" })
-  @IsNotEmpty({ message: "密码不能为空" })
+  @ApiProperty({ required: true, description: 'Password' })
+  @IsString({ message: 'Password must be a string type' })
+  @IsNotEmpty({ message: 'Password can not be blank' })
   readonly password: string;
 }

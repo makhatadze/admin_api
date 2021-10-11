@@ -1,16 +1,9 @@
-import {
-  registerDecorator,
-  ValidationOptions,
-  ValidationArguments
-} from "class-validator";
+import { registerDecorator, ValidationOptions, ValidationArguments } from 'class-validator';
 
-export function IsEqual(
-  property: string,
-  validationOptions?: ValidationOptions
-) {
-  return function(object: Record<string, any>, propertyName: string) {
+export function IsEqual(property: string, validationOptions?: ValidationOptions) {
+  return function (object: Record<string, any>, propertyName: string) {
     registerDecorator({
-      name: "isEqual",
+      name: 'isEqual',
       target: object.constructor,
       propertyName: propertyName,
       constraints: [property],
@@ -21,15 +14,13 @@ export function IsEqual(
           const [relatedPropertyName] = args.constraints;
           const relatedValue = (args.object as any)[relatedPropertyName];
           return (
-            typeof value === "string" &&
-            typeof relatedValue === "string" &&
-            value === relatedValue
+            typeof value === 'string' && typeof relatedValue === 'string' && value === relatedValue
           );
         },
         defaultMessage() {
-          return "两次密码不一致";
-        }
-      }
+          return 'The two passwords are inconsistent';
+        },
+      },
     });
   };
 }

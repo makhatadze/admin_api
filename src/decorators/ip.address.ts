@@ -1,22 +1,15 @@
-import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { Request } from "express";
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { Request } from 'express';
 
 /**
- * @Author: 水痕
- * @Date: 2021-03-22 11:41:12
- * @LastEditors: 水痕
- * @Description: 从请求头中获取ip地址，需要配置nginx才能拿到ip
+ * @Description: Get the ip address from the request header, you need to configure nginx to get the ip
  * @param {*} createParamDecorator
  * @return {*}
  */
-export const IpAddress = createParamDecorator(
-  (_data: string, ctx: ExecutionContext) => {
-    const req: Request = ctx.switchToHttp().getRequest();
-    const rawIp: string | undefined =
-      req.header("x-forwarded-for") ||
-      req.connection.remoteAddress ||
-      req.socket.remoteAddress;
-    const ipAddress = rawIp ? rawIp!.split(",")[0] : "";
-    return ipAddress;
-  }
-);
+export const IpAddress = createParamDecorator((_data: string, ctx: ExecutionContext) => {
+  const req: Request = ctx.switchToHttp().getRequest();
+  const rawIp: string | undefined =
+    req.header('x-forwarded-for') || req.connection.remoteAddress || req.socket.remoteAddress;
+  const ipAddress = rawIp ? rawIp!.split(',')[0] : '';
+  return ipAddress;
+});

@@ -1,20 +1,20 @@
-import { QueryOptionsDto } from "../../../../../../../dto/query.options.dto";
-import { ApiPropertyOptional } from "@nestjs/swagger";
-import { ValidateIf, IsOptional, IsEnum } from "class-validator";
-import { Type } from "class-transformer";
+import { QueryOptionsDto } from '@src/dto/query.options.dto';
+import { ApiPropertyOptional } from '@nestjs/swagger';
+import { ValidateIf, IsOptional, IsEnum } from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class RoleReqDto extends QueryOptionsDto {
-  @ApiPropertyOptional({ required: false, description: "角色名称" })
+  @ApiPropertyOptional({ required: false, description: 'Role Name' })
   @IsOptional()
   readonly name?: string;
 
-  @ApiPropertyOptional({ required: false, description: "状态", enum: [0, 1] })
+  @ApiPropertyOptional({ required: false, description: 'state', enum: [0, 1] })
   @IsEnum(
-    { 禁用: 0, 当前可用: 1 },
-    { message: "状态必须是(0:表示禁止,1:表示正常)的数字" }
+    { Disable: 0, CurrentlyAvailable: 1 },
+    { message: 'The status must be a number (0: means prohibited, 1: normal)' },
   )
   @Type(() => Number)
-  @ValidateIf((o) => o.status != "")
+  @ValidateIf((o) => o.status != '')
   @IsOptional()
   readonly status?: number;
 }

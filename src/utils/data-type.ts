@@ -4,11 +4,11 @@ const toString = Object.prototype.toString;
  * for plain JavaScript objects.
  */
 export const isObject = (obj: any) => {
-  return Object.is(toString.call(obj), "[object Object]");
+  return Object.is(toString.call(obj), '[object Object]');
 };
 
 export const isRegExp = (v: any) => {
-  return Object.is(toString.call(v), "[object RegExp]");
+  return Object.is(toString.call(v), '[object RegExp]');
 };
 
 /**
@@ -20,7 +20,7 @@ export const isValidArrayIndex = (val: number) => {
 };
 
 export const isString = (str: any) => {
-  return Object.is(toString.call(str), "[object String]");
+  return Object.is(toString.call(str), '[object String]');
 };
 
 // Determine whether it is uuid

@@ -10,38 +10,32 @@ import {
   Get,
   Query,
   HttpCode,
-  HttpStatus
-} from "@nestjs/common";
-import {
-  ApiTags,
-  ApiBearerAuth,
-  ApiOperation,
-  ApiOkResponse
-} from "@nestjs/swagger";
-import { AuthGuard } from "../../../../../../guard/auth/auth.guard";
-import { RoleService } from "../../services/role/role.service";
-import { CreateRoleDto } from "./dto/create.role.dto";
-import { UpdateRoleDto } from "./dto/update.role.dto";
-import { RoleListVo, RoleVo } from "./vo/role.vo";
-import { RoleReqDto } from "./dto/role.req.dto";
-import { ApiAuth } from "../../../../../../decorators/api.auth";
+  HttpStatus,
+} from '@nestjs/common';
+import { ApiTags, ApiBearerAuth, ApiOperation, ApiOkResponse } from '@nestjs/swagger';
+import { AuthGuard } from '@src/guard/auth/auth.guard';
+import { RoleService } from '../../services/role/role.service';
+import { CreateRoleDto } from './dto/create.role.dto';
+import { UpdateRoleDto } from './dto/update.role.dto';
+import { RoleListVo, RoleVo } from './vo/role.vo';
+import { RoleReqDto } from './dto/role.req.dto';
+import { ApiAuth } from '@src/decorators/api.auth';
 
-@ApiTags("后台管理系统-角色管理")
+@ApiTags('Backstage management system-role management')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
-@Controller("role")
+@Controller('role')
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {
-  }
+  constructor(private readonly roleService: RoleService) {}
 
   @ApiOperation({
-    summary: "创建角色",
-    description: "创建角色"
+    summary: 'Creating a Role',
+    description: 'Creating a Role',
   })
   @ApiOkResponse({
     type: String,
-    description: "创建角色返回值"
+    description: 'Create role return value',
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
@@ -49,56 +43,52 @@ export class RoleController {
     return await this.roleService.createRole(createRoleDto);
   }
 
-  @ApiOperation({ summary: "删除角色", description: "根据角色id删除角色" })
+  @ApiOperation({ summary: 'Delete role', description: 'Delete roles based on role id' })
   @ApiOkResponse({
     type: String,
-    description: "删除角色返回值"
+    description: 'Delete role return value',
   })
   @HttpCode(HttpStatus.OK)
-  @Delete(":id")
-  async destroyRoleById(
-    @Param("id", new ParseIntPipe()) id: number
-  ): Promise<string> {
+  @Delete(':id')
+  async destroyRoleById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.roleService.destroyRoleById(id);
   }
 
-  @ApiOperation({ summary: "修改角色", description: "根据角色id修改角色" })
+  @ApiOperation({ summary: 'Modify role', description: 'Modify the role according to the role id' })
   @ApiOkResponse({
     type: String,
-    description: "修改角色返回值"
+    description: 'Modify role return value',
   })
   @HttpCode(HttpStatus.OK)
-  @Patch(":id")
+  @Patch(':id')
   async modifyRoleById(
-    @Param("id", new ParseIntPipe()) id: number,
-    @Body() updateRoleDto: UpdateRoleDto
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateRoleDto: UpdateRoleDto,
   ): Promise<string> {
     return await this.roleService.modifyRoleById(id, updateRoleDto);
   }
 
-  @ApiOperation({ summary: "查询角色", description: "根据角色id查询角色" })
+  @ApiOperation({ summary: 'Query role', description: 'Query role based on role id' })
   @ApiOkResponse({
     type: RoleVo,
-    description: "查询单条角色返回值"
+    description: 'Query the return value of a single role',
   })
   @HttpCode(HttpStatus.OK)
-  @Get(":id")
-  async roleById(
-    @Param("id", new ParseIntPipe()) id: number
-  ): Promise<RoleVo | undefined> {
+  @Get(':id')
+  async roleById(@Param('id', new ParseIntPipe()) id: number): Promise<RoleVo | undefined> {
     return await this.roleService.roleById(id);
   }
 
   @ApiOperation({
-    summary: "查询角色列表",
-    description: "查询角色",
+    summary: 'Query role list',
+    description: 'Query role',
     externalDocs: {
-      url: "xx?pageSize=10&pageNumber=1&name=x&status=0"
-    }
+      url: 'xx?pageSize=10&pageNumber=1&name=x&status=0',
+    },
   })
   @ApiOkResponse({
     type: RoleListVo,
-    description: "分页查询角色返回值"
+    description: 'Paging query role return value',
   })
   @HttpCode(HttpStatus.OK)
   @Get()

@@ -1,27 +1,27 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { QueryListVo } from "../../../../../../../vo/query.list.vo";
-import { QueryVo } from "../../../../../../../vo/query.vo";
+import { ApiProperty } from '@nestjs/swagger';
+import { QueryListVo } from '@src/vo/query.list.vo';
+import { QueryVo } from '@src/vo/query.vo';
 
 export class AccountVo extends QueryVo {
-  @ApiProperty({ description: "用户名" })
+  @ApiProperty({ description: 'Username' })
   username?: string;
 
-  @ApiProperty({ description: "邮箱" })
+  @ApiProperty({ description: 'Mail' })
   email?: string;
 
-  @ApiProperty({ description: "手机号码" })
+  @ApiProperty({ description: 'mobile phone number' })
   mobile?: string;
 
-  @ApiProperty({ description: "状态,0表示禁止,1表示正常" })
+  @ApiProperty({ description: 'Status, 0 means not active, 1 means active' })
   status?: number;
 
   @ApiProperty({
-    description: "平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家"
+    description: 'Platform: 0 means normal user (no authority), 1 means operation management, 2 means check-in business',
   })
   platform?: number;
 }
 
 export class AccountListVo extends QueryListVo {
-  @ApiProperty({ description: "返回数据列表", type: AccountVo, isArray: true })
+  @ApiProperty({ description: 'Return data list', type: AccountVo, isArray: true })
   data: AccountVo[];
 }

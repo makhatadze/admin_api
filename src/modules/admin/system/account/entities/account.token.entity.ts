@@ -1,78 +1,78 @@
-import { PlatformEnum } from "../../../../../enums";
-import { SharedEntity } from "../../../../shared/entities/shared.entity";
-import { Column, Entity } from "typeorm";
+import { PlatformEnum } from '@src/enums';
+import { SharedEntity } from '../../../../shared/entities/shared.entity';
+import { Column, Entity } from 'typeorm';
 
-@Entity("account_token")
+@Entity('account_token')
 export class AccountTokenEntity extends SharedEntity {
   @Column({
-    type: "int",
+    type: 'int',
     nullable: false,
     unique: true,
-    name: "user_id",
-    comment: "关联用户表的ID"
+    name: 'user_id',
+    comment: 'ID of the associated user table',
   })
   userId: number;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: false,
     length: 100,
     unique: true,
-    name: "token",
-    comment: "token"
+    name: 'token',
+    comment: 'token',
   })
   token: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: false,
     length: 45,
-    name: "username",
-    comment: "用户名"
+    name: 'username',
+    comment: 'username',
   })
   username: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
     length: 11,
-    name: "mobile",
-    comment: "手机号码"
+    name: 'mobile',
+    comment: 'mobile phone number',
   })
   mobile: string;
 
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
     length: 50,
-    name: "email",
-    comment: "邮箱"
+    name: 'email',
+    comment: 'Mail',
   })
   email: string;
 
   @Column({
-    type: "tinyint",
+    type: 'tinyint',
     nullable: true,
-    name: "platform",
+    name: 'platform',
     default: 0,
-    comment: "平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家"
+    comment: 'Platform: 0 means normal user (no authority), 1 means operation management, 2 means check-in business',
   })
   platform: PlatformEnum;
 
   @Column({
-    type: "tinyint",
+    type: 'tinyint',
     nullable: false,
     default: 0,
-    name: "is_super",
-    comment: "是否为超级管理员1表示是,0表示不是"
+    name: 'is_super',
+    comment: 'Whether it is a super administrator 1 means yes, 0 means no',
   })
   isSuper: number;
 
   @Column({
-    type: "timestamp",
-    name: "expire_time",
+    type: 'timestamp',
+    name: 'expire_time',
     nullable: false,
-    comment: "失效时间"
+    comment: 'Expiration time',
   })
   expireTime: Date;
 }

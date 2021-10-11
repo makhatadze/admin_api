@@ -1,5 +1,5 @@
-import { applyDecorators, SetMetadata } from "@nestjs/common";
-import { API_AUTH_KEY } from "../constants";
+import { applyDecorators, SetMetadata } from '@nestjs/common';
+import { API_AUTH_KEY } from '../constants';
 
 /**
  * @constructor

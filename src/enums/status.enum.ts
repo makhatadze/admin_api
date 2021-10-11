@@ -8,6 +8,6 @@ export enum StatusEnum {
 
 /** State profile */
 export const StatusMessage = {
-  0: "Disable",
-  1: "Normal"
+  0: 'Disable',
+  1: 'Normal',
 };

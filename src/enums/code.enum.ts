@@ -8,6 +8,6 @@ export enum CodeEnum {
 
 /** Wrong code text description */
 export const CodeMessage = {
-  10042: "You are not logged in, please log in first",
-  10043: "The passed token is wrong"
+  10042: 'You are not logged in, please log in first',
+  10043: 'The passed token is wrong',
 };

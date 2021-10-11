@@ -3,22 +3,20 @@ import {
   ValidateBy,
   buildMessage,
   isMobilePhone,
-  isEmail
-} from "class-validator";
-import { usernameReg } from "../constants";
+  isEmail,
+} from 'class-validator';
+import { usernameReg } from '../constants';
 
-export const IS_USER_NAME = "isUserName";
+export const IS_USER_NAME = 'isUserName';
 
 export const isUserName = (value: unknown): boolean => {
   return (
-    typeof value === "string" &&
-    (usernameReg.test(value) || isMobilePhone(value, "zh-CN") || isEmail(value))
+    typeof value === 'string' &&
+    (usernameReg.test(value) || isMobilePhone(value, 'zh-CN') || isEmail(value))
   );
 };
 
-export function IsUserName(
-  validationOptions?: ValidationOptions
-): PropertyDecorator {
+export function IsUserName(validationOptions?: ValidationOptions): PropertyDecorator {
   return ValidateBy(
     {
       name: IS_USER_NAME,
@@ -28,11 +26,11 @@ export function IsUserName(
         defaultMessage: buildMessage(
           (eachPrefix) =>
             eachPrefix +
-            "$property 错误只能是邮箱，手机号码，4-20位的数字或大小写字母或.",
-          validationOptions
-        )
-      }
+            'The $property error can only be email, mobile phone number, 4-20 digits or uppercase and lowercase letters or.',
+          validationOptions,
+        ),
+      },
     },
-    validationOptions
+    validationOptions,
   );
 }

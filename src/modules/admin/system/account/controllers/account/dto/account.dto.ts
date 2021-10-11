@@ -1,50 +1,50 @@
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsMobilePhone,
   ValidateIf,
   IsOptional,
   IsEmail,
-  IsEnum
-} from "class-validator";
-import { Type } from "class-transformer";
+  IsEnum,
+} from 'class-validator';
+import { Type } from 'class-transformer';
 
 export class AccountDto {
-  @ApiPropertyOptional({ required: false, description: "手机号码" })
-  @IsMobilePhone("zh-CN", {}, { message: "手机号码格式错误" })
-  @ValidateIf((o) => o.mobile != "")
+  @ApiPropertyOptional({ required: false, description: 'mobile phone number' })
+  @IsMobilePhone('zh-CN', {}, { message: 'Wrong format of phone number' })
+  @ValidateIf((o) => o.mobile != '')
   @IsOptional()
   readonly mobile?: string;
 
-  @ApiPropertyOptional({ required: false, description: "手机号码" })
-  @IsEmail({}, { message: "邮箱格式错误" })
-  @ValidateIf((o) => o.email != "")
+  @ApiPropertyOptional({ required: false, description: 'Email' })
+  @IsEmail({}, { message: 'Email format error' })
+  @ValidateIf((o) => o.email != '')
   @IsOptional()
   readonly email?: string;
 
-  @ApiPropertyOptional({ required: false, description: "状态", enum: [0, 1] })
+  @ApiPropertyOptional({ required: false, description: 'state', enum: [0, 1] })
   @IsEnum(
-    { 禁用: 0, 当前可用: 1 },
-    { message: "状态必须是(0:表示禁止,1:表示正常)的数字" }
+    { DISABLE: 0, ACTIVE: 1 },
+    { message: 'The status must be a number (0: means prohibited, 1: normal)' },
   )
   @Type(() => Number)
-  @ValidateIf((o) => o.status != "")
+  @ValidateIf((o) => o.status != '')
   @IsOptional()
   readonly status?: number;
 
   @ApiPropertyOptional({
     required: false,
-    description: "平台",
-    enum: [0, 1, 2]
+    description: 'platform',
+    enum: [0, 1, 2],
   })
   @IsEnum(
-    { 普通用户: 0, 运营管理: 1, 商家入驻: 2 },
+    { GENERAL_USER: 0, OPERATION_MANAGER: 1, MERCHANT: 2 },
     {
       message:
-        "平台必须是(0表示普通用户(没权限),1表示为运营管理,2表示入住商家)的数字"
-    }
+        'The platform must be a number (0 means normal user (no permission), 1 means operation management, 2 means check-in business)',
+    },
   )
   @Type(() => Number)
-  @ValidateIf((o) => o.platform != "")
+  @ValidateIf((o) => o.platform != '')
   @IsOptional()
   readonly platform?: number;
 }

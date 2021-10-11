@@ -1,22 +1,22 @@
-import { Column, Entity, Unique } from "typeorm";
-import { SharedEntity } from "../../../../shared/entities/shared.entity";
+import { Column, Entity, Unique } from 'typeorm';
+import { SharedEntity } from '../../../../shared/entities/shared.entity';
 
-@Entity("account_role")
-@Unique("account_role_deleted", ["accountId", "roleId", "deletedAt"])
+@Entity('account_role')
+@Unique('account_role_deleted', ['accountId', 'roleId', 'deletedAt'])
 export class AccountRoleEntity extends SharedEntity {
   @Column({
-    type: "int",
+    type: 'int',
     nullable: false,
-    name: "account_id",
-    comment: "账号id"
+    name: 'account_id',
+    comment: 'Account id',
   })
   accountId: number;
 
   @Column({
-    type: "int",
+    type: 'int',
     nullable: false,
-    name: "role_id",
-    comment: "角色id"
+    name: 'role_id',
+    comment: 'Role id',
   })
   roleId: number;
 }

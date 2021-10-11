@@ -10,7 +10,7 @@ export enum AccessTypeEnum {
 
 /** Resource type enumeration */
 export const AccessTypeMessage = {
-  1: "Module",
-  2: "Menu",
-  3: "Operate(API)"
+  1: 'Module',
+  2: 'Menu',
+  3: 'Operate(API)',
 };

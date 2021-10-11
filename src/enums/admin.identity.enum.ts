@@ -8,6 +8,6 @@ export enum AdminIdentityEnum {
 
 /** Background management account identity description */
 export const AdminIdentityMessage = {
-  0: "Ordinary account",
-  1: "Super administrator"
+  0: 'Ordinary account',
+  1: 'Super administrator',
 };

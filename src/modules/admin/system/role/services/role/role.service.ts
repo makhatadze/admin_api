@@ -1,15 +1,15 @@
-import { Injectable, HttpException, HttpStatus } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { RoleEntity } from "../../entities/role.entity";
-import { Repository, getConnection, ILike, Equal } from "typeorm";
-import { CreateRoleDto } from "../../controllers/role/dto/create.role.dto";
-import { UpdateRoleDto } from "../../controllers/role/dto/update.role.dto";
-import { RoleListVo, RoleVo } from "../../controllers/role/vo/role.vo";
-import { RoleReqDto } from "../../controllers/role/dto/role.req.dto";
-import { PageEnum, StatusEnum } from "../../../../../../enums";
-import { RoleEnum } from "@src/enums";
-import { AccountRoleEntity } from "../../../account/entities/account.role.entity";
-import { mapToObj } from "@src/utils";
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { RoleEntity } from '../../entities/role.entity';
+import { Repository, getConnection, ILike, Equal } from 'typeorm';
+import { CreateRoleDto } from '../../controllers/role/dto/create.role.dto';
+import { UpdateRoleDto } from '../../controllers/role/dto/update.role.dto';
+import { RoleListVo, RoleVo } from '../../controllers/role/vo/role.vo';
+import { RoleReqDto } from '../../controllers/role/dto/role.req.dto';
+import { PageEnum, StatusEnum } from '../../../../../../enums';
+import { RoleEnum } from '@src/enums';
+import { AccountRoleEntity } from '../../../account/entities/account.role.entity';
+import { mapToObj } from '@src/utils';
 
 @Injectable()
 export class RoleService {
@@ -17,75 +17,69 @@ export class RoleService {
     @InjectRepository(RoleEntity)
     private readonly roleRepository: Repository<RoleEntity>,
     @InjectRepository(AccountRoleEntity)
-    private readonly accountRoleRepository: Repository<AccountRoleEntity>
-  ) {
-  }
+    private readonly accountRoleRepository: Repository<AccountRoleEntity>,
+  ) {}
 
   /**
-   * @Author: 水痕
-   * @Date: 2021-03-23 13:38:11
-   * @LastEditors: 水痕
-   * @Description: 创建角色
+   * @Description: Creating a Role
    * @param {CreateRoleDto} createRoleDto
    * @return {*}
    */
   async createRole(createRoleDto: CreateRoleDto): Promise<string> {
     const { name, isDefault } = createRoleDto;
-    const findNameResult: Pick<RoleEntity, "id"> | undefined =
-      await this.roleRepository.findOne({
-        where: { name },
-        select: ["id"]
-      });
+    const findNameResult: Pick<RoleEntity, 'id'> | undefined = await this.roleRepository.findOne({
+      where: { name },
+      select: ['id'],
+    });
     if (findNameResult) {
       throw new HttpException(
-        `${name}当前角色已经存在,不能重复创建`,
-        HttpStatus.OK
+        `${name}The current role already exists and cannot be created repeatedly`,
+        HttpStatus.OK,
       );
     }
-    // 如果是默认角色的时候要判断下
+    // If it is the default role, judge it
     if (Object.is(isDefault, RoleEnum.DEFAULT)) {
-      const findDefault: Pick<RoleEntity, "id"> | undefined =
-        await this.roleRepository.findOne({
-          where: { isDefault },
-          select: ["id"]
-        });
+      const findDefault: Pick<RoleEntity, 'id'> | undefined = await this.roleRepository.findOne({
+        where: { isDefault },
+        select: ['id'],
+      });
       if (findDefault) {
-        throw new HttpException("已经存在默认角色不能重复创建", HttpStatus.OK);
+        throw new HttpException(
+          'Existing default roles cannot be created repeatedly',
+          HttpStatus.OK,
+        );
       }
     }
     const role: RoleEntity = this.roleRepository.create(createRoleDto);
     await this.roleRepository.save(role);
-    return "创建角色成功";
+    return 'Role created successfully';
   }
 
   /**
-   * @Author: 水痕
-   * @Date: 2021-03-23 14:15:06
-   * @LastEditors: 水痕
-   * @Description: 根据角色id删除角色
+   * @Description: Delete roles based on role id
    * @param {number} id
    * @return {*}
    */
   async destroyRoleById(id: number): Promise<string> {
-    // 判断当前角色是否已经被占用(有账号绑定了该角色)
-    const accountRoleFindResult: Pick<AccountRoleEntity, "id"> | undefined =
+    // Determine whether the current role is already occupied (the role is bound to an account)
+    const accountRoleFindResult: Pick<AccountRoleEntity, 'id'> | undefined =
       await this.accountRoleRepository.findOne({
         where: { roleId: id },
-        select: ["id"]
+        select: ['id'],
       });
     if (accountRoleFindResult) {
       throw new HttpException(
-        "当前角色有账号与之绑定,不能直接删除",
-        HttpStatus.OK
+        'The current role has an account bound to it and cannot be deleted directly',
+        HttpStatus.OK,
       );
     }
     const {
-      raw: { affectedRows }
+      raw: { affectedRows },
     } = await this.roleRepository.softDelete(id);
     if (affectedRows) {
-      return "删除成功";
+      return 'successfully deleted';
     } else {
-      return "删除失败";
+      return 'failed to delete';
     }
   }
 
@@ -98,27 +92,24 @@ export class RoleService {
    * @param {UpdateRoleDto} updateRoleDto
    * @return {*}
    */
-  async modifyRoleById(
-    id: number,
-    updateRoleDto: UpdateRoleDto
-  ): Promise<string> {
+  async modifyRoleById(id: number, updateRoleDto: UpdateRoleDto): Promise<string> {
     const { isDefault } = updateRoleDto;
     if (Object.is(isDefault, String(RoleEnum.DEFAULT))) {
       const findResult = await this.roleRepository.findOne({
         where: { isDefault },
-        select: ["id"]
+        select: ['id'],
       });
       if (findResult?.id !== id) {
-        throw new HttpException("默认角色只能有一个", HttpStatus.OK);
+        throw new HttpException('默认角色只能有一个', HttpStatus.OK);
       }
     }
     const {
-      raw: { affectedRows }
+      raw: { affectedRows },
     } = await this.roleRepository.update(id, updateRoleDto);
     if (affectedRows) {
-      return "修改成功";
+      return '修改成功';
     } else {
-      return "修改失败";
+      return '修改失败';
     }
   }
 
@@ -147,17 +138,17 @@ export class RoleService {
       pageNumber = PageEnum.PAGE_NUMBER,
       pageSize = PageEnum.PAGE_SIZE,
       name,
-      status
+      status,
     } = roleReqDto;
     const query = new Map();
     if (name) {
-      query.set("name", ILike(name));
+      query.set('name', ILike(name));
     }
     if ([StatusEnum.NORMAL, StatusEnum.FORBIDDEN].includes(Number(status))) {
-      query.set("status", Equal(status));
+      query.set('status', Equal(status));
     }
     const [data, total] = await getConnection()
-      .createQueryBuilder(RoleEntity, "role")
+      .createQueryBuilder(RoleEntity, 'role')
       .where(mapToObj(query))
       .skip((pageNumber - 1) * pageSize)
       .take(pageSize)
@@ -167,7 +158,7 @@ export class RoleService {
       data,
       total,
       pageSize,
-      pageNumber
+      pageNumber,
     };
   }
 }

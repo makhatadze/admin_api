@@ -1,83 +1,76 @@
-import {
-  Entity,
-  Column,
-  Unique,
-  Index,
-  BeforeInsert,
-  BeforeUpdate,
-  AfterLoad
-} from "typeorm";
-import { Exclude } from "class-transformer";
-import NodeAuth from "simp-node-auth";
-import { isMobilePhone, isEmail } from "class-validator";
+import { Entity, Column, Unique, Index, BeforeInsert, BeforeUpdate, AfterLoad } from 'typeorm';
+import { Exclude } from 'class-transformer';
+import NodeAuth from 'simp-node-auth';
+import { isMobilePhone, isEmail } from 'class-validator';
 
-import { SharedEntity } from "../../../../shared/entities/shared.entity";
-import { usernameReg } from "../../../../../constants";
-import { PlatformEnum, StatusEnum } from "../../../../../enums";
+import { SharedEntity } from '../../../../shared/entities/shared.entity';
+import { usernameReg } from '@src/constants';
+import { PlatformEnum, StatusEnum } from '../../../../../enums';
 
-@Entity("account")
-@Unique("username_mobile_email_unique", ["username", "mobile", "email"])
-@Unique("username_deleted", ["username", "deletedAt"])
-@Unique("email_deleted", ["email", "deletedAt"])
-@Unique("mobile_deleted", ["mobile", "deletedAt"])
+@Entity('account')
+@Unique('username_mobile_email_unique', ['username', 'mobile', 'email'])
+@Unique('username_deleted', ['username', 'deletedAt'])
+@Unique('email_deleted', ['email', 'deletedAt'])
+@Unique('mobile_deleted', ['mobile', 'deletedAt'])
 export class AccountEntity extends SharedEntity {
   @Index()
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 50,
-    name: "username",
-    comment: "用户名"
+    name: 'username',
+    comment: 'username',
   })
   username: string;
   @Exclude()
   @Column({
-    type: "varchar",
+    type: 'varchar',
     length: 100,
-    name: "password",
+    name: 'password',
     select: false,
-    comment: "密码"
+    comment: 'password',
   })
   password: string;
   @Index()
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
     length: 11,
-    name: "mobile",
-    comment: "手机号码"
+    name: 'mobile',
+    comment: 'mobile phone number',
   })
   mobile: string;
   @Index()
   @Column({
-    type: "varchar",
+    type: 'varchar',
     nullable: true,
     length: 50,
-    name: "email",
-    comment: "邮箱"
+    name: 'email',
+    comment: 'Mail',
   })
   email: string;
   @Column({
-    type: "tinyint",
+    type: 'tinyint',
     nullable: true,
     default: 1,
-    name: "status",
-    comment: "状态,0表示禁止,1表示正常"
+    name: 'status',
+    comment: 'Status, 0 means disabled, 1 means active',
   })
   status: StatusEnum;
   @Column({
-    type: "tinyint",
+    type: 'tinyint',
     nullable: true,
-    name: "platform",
+    name: 'platform',
     default: 0,
-    comment: "平台:0表示普通用户(没权限),1表示为运营管理,2表示入住商家"
+    comment:
+      'Platform: 0 means normal user (no authority), 1 means operation management, 2 means check-in business',
   })
   platform: PlatformEnum;
   @Column({
-    type: "tinyint",
+    type: 'tinyint',
     nullable: false,
     default: 0,
-    name: "is_super",
-    comment: "是否为超级管理员1表示是,0表示不是"
+    name: 'is_super',
+    comment: 'Whether it is a super administrator 1 means yes, 0 means no',
   })
   isSuper: number;
   @Exclude()
@@ -100,34 +93,24 @@ export class AccountEntity extends SharedEntity {
   generateUserNameOrEmailOrMobile() {
     if (this.username) {
       this.mobile =
-        this.mobile && isMobilePhone(this.mobile, "zh-CN")
-          ? this.mobile
-          : `_${this.username}`;
-      this.email =
-        this.email && isEmail(this.email) ? this.email : `_${this.username}`;
+        this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.username}`;
+      this.email = this.email && isEmail(this.email) ? this.email : `_${this.username}`;
     } else if (this.mobile) {
       this.username =
-        this.username && usernameReg.test(this.username)
-          ? this.username
-          : `_${this.mobile}`;
-      this.email =
-        this.email && isEmail(this.email) ? this.email : `_${this.mobile}`;
+        this.username && usernameReg.test(this.username) ? this.username : `_${this.mobile}`;
+      this.email = this.email && isEmail(this.email) ? this.email : `_${this.mobile}`;
     } else if (this.email) {
       this.username =
-        this.username && usernameReg.test(this.username)
-          ? this.username
-          : `_${this.email}`;
+        this.username && usernameReg.test(this.username) ? this.username : `_${this.email}`;
       this.mobile =
-        this.mobile && isMobilePhone(this.mobile, "zh-CN")
-          ? this.mobile
-          : `_${this.email}`;
+        this.mobile && isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : `_${this.email}`;
     }
   }
 
   @AfterLoad()
   formatResponseData() {
-    this.mobile = isMobilePhone(this.mobile, "zh-CN") ? this.mobile : "";
-    this.email = isEmail(this.email) ? this.email : "";
-    this.username = usernameReg.test(this.username) ? this.username : "";
+    this.mobile = isMobilePhone(this.mobile, 'zh-CN') ? this.mobile : '';
+    this.email = isEmail(this.email) ? this.email : '';
+    this.username = usernameReg.test(this.username) ? this.username : '';
   }
 }

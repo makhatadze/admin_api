@@ -10,141 +10,127 @@ import {
   UseGuards,
   Query,
   HttpStatus,
-  HttpCode
-} from "@nestjs/common";
-import {
-  ApiOperation,
-  ApiTags,
-  ApiBearerAuth,
-  ApiOkResponse
-} from "@nestjs/swagger";
-import { CreateAccountDto } from "./dto/create.account.dto";
-import { AccountService } from "../../services/account/account.service";
-import { UpdateAccountDto } from "./dto/update.account.dto";
-import { ModifyPasswordDto } from "./dto/modify.password.dto";
-import { AuthGuard } from "../../../../../../guard/auth/auth.guard";
-import { AccountVo, AccountListVo } from "./vo/account.vo";
-import { AccountReqDto } from "./dto/account.req.dto";
-import {
-  CurrentUser,
-  ICurrentUserType
-} from "../../../../../../decorators/current.user";
-import { ApiAuth } from "../../../../../../decorators/api.auth";
+  HttpCode,
+} from '@nestjs/common';
+import { ApiOperation, ApiTags, ApiBearerAuth, ApiOkResponse } from '@nestjs/swagger';
+import { CreateAccountDto } from './dto/create.account.dto';
+import { AccountService } from '../../services/account/account.service';
+import { UpdateAccountDto } from './dto/update.account.dto';
+import { ModifyPasswordDto } from './dto/modify.password.dto';
+import { AuthGuard } from '@src/guard/auth/auth.guard';
+import { AccountVo, AccountListVo } from './vo/account.vo';
+import { AccountReqDto } from './dto/account.req.dto';
+import { CurrentUser, ICurrentUserType } from '@src/decorators/current.user';
+import { ApiAuth } from '@src/decorators/api.auth';
 
-@ApiTags("后台管理系统-账号管理")
+@ApiTags('Backstage management system-account management')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
-@Controller("account")
+@Controller('account')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) {
-  }
+  constructor(private readonly accountService: AccountService) {}
 
   @ApiOperation({
-    summary: "创建账号",
-    description: "创建账号"
+    summary: 'Create an account',
+    description: 'Create an account',
   })
   @ApiOkResponse({
     type: String,
-    description: "创建账号返回值"
+    description: 'Create account return value',
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createAccount(
-    @Body() createAccountDto: CreateAccountDto
-  ): Promise<string> {
+  async createAccount(@Body() createAccountDto: CreateAccountDto): Promise<string> {
     return await this.accountService.createAccount(createAccountDto);
   }
 
   @ApiOperation({
-    summary: "重置为默认密码",
-    description: "根据id重置默认密码"
+    summary: 'Reset to default password',
+    description: 'Reset default password based on id',
   })
-  @ApiOkResponse({ type: String, description: "重置密码返回值" })
+  @ApiOkResponse({ type: String, description: 'Reset password return value' })
   @HttpCode(HttpStatus.OK)
-  @Post("reset_password")
+  @Post('reset_password')
   async resetPassword(@Body() data: { id: number }): Promise<string> {
     const { id } = data;
     return await this.accountService.resetPassword(id);
   }
 
-  @ApiOperation({ summary: "修改密码", description: "根据账号自己的密码" })
+  @ApiOperation({
+    summary: 'Change Password',
+    description: "According to the account's own password",
+  })
   @ApiOkResponse({
     type: String,
-    description: "修改账号密码返回值"
+    description: 'Modify account password return value',
   })
   @HttpCode(HttpStatus.OK)
-  @Post("modify_password")
+  @Post('modify_password')
   async modifyPassWordById(
     @CurrentUser() userInfo: ICurrentUserType,
-    @Body() modifyPasswordDto: ModifyPasswordDto
+    @Body() modifyPasswordDto: ModifyPasswordDto,
   ): Promise<string> {
     const { id } = userInfo;
     return await this.accountService.modifyPassWordById(id, modifyPasswordDto);
   }
 
-  @ApiOperation({ summary: "删除账号", description: "根据id删除账号" })
+  @ApiOperation({ summary: 'Delete account', description: 'Delete account based on id' })
   @ApiOkResponse({
     type: String,
-    description: "修改账号返回值"
+    description: 'Modify account return value',
   })
   @HttpCode(HttpStatus.OK)
-  @Delete(":id")
-  async destroyById(
-    @Param("id", new ParseIntPipe()) id: number
-  ): Promise<string> {
+  @Delete(':id')
+  async destroyById(@Param('id', new ParseIntPipe()) id: number): Promise<string> {
     return await this.accountService.destroyById(id);
   }
 
   @ApiOperation({
-    summary: "修改账号信息",
-    description: "根据账号id修改账号信息"
+    summary: 'Modify account information',
+    description: 'Modify account information according to account id',
   })
   @ApiOkResponse({
     type: String,
-    description: "修改账号返回值"
+    description: 'Modify account return value',
   })
   @HttpCode(HttpStatus.OK)
-  @Patch(":id")
+  @Patch(':id')
   async modifyById(
-    @Param("id", new ParseIntPipe()) id: number,
-    @Body() updateAccountDto: UpdateAccountDto
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateAccountDto: UpdateAccountDto,
   ): Promise<string> {
     return await this.accountService.modifyById(id, updateAccountDto);
   }
 
   @ApiOperation({
-    summary: "查询账号信息",
-    description: "根据账号id查询账号信息"
+    summary: 'Query account information',
+    description: 'Query account information based on account id',
   })
   @ApiOkResponse({
     type: AccountVo,
-    description: "查询单条账号返回值"
+    description: 'Query the return value of a single account',
   })
   @HttpCode(HttpStatus.OK)
-  @Get(":id")
-  async accountById(
-    @Param("id", new ParseIntPipe()) id: number
-  ): Promise<AccountVo | undefined> {
+  @Get(':id')
+  async accountById(@Param('id', new ParseIntPipe()) id: number): Promise<AccountVo | undefined> {
     return await this.accountService.accountById(id);
   }
 
   @ApiOperation({
-    summary: "查询账号列表",
-    description: "根据条件查询账号列表",
+    summary: 'Query account list',
+    description: 'Query account list based on conditions',
     externalDocs: {
-      url: "xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1"
-    }
+      url: 'xx?pageSize=10&pageNumber=1&username=xx&email=xx&mobile=xx&status=0&platform=1',
+    },
   })
   @ApiOkResponse({
     type: AccountListVo,
-    description: "分页查询账号返回值"
+    description: 'Page query account return value',
   })
   @HttpCode(HttpStatus.OK)
   @Get()
-  async accountList(
-    @Query() accountReqDto: AccountReqDto
-  ): Promise<AccountListVo> {
+  async accountList(@Query() accountReqDto: AccountReqDto): Promise<AccountListVo> {
     return await this.accountService.accountList(accountReqDto);
   }
 }

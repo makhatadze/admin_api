@@ -1,3 +1,3 @@
 export default {
-  redisEXSecond: 60 // 缓存1分钟
+  redisEXSecond: 60, // Cache for 1 minute
 };

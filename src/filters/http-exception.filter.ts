@@ -4,9 +4,9 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
-  Logger
-} from "@nestjs/common";
-import { formatDate } from "../utils";
+  Logger,
+} from '@nestjs/common';
+import { formatDate } from '../utils';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -15,9 +15,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const request = ctx.getRequest();
     const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+      exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
     let resultMessage = exception.message;
     let resultCode = 1;
     let resultParams = {};
@@ -26,28 +24,27 @@ export class HttpExceptionFilter implements ExceptionFilter {
       resultMessage = message;
       resultCode = code;
       resultParams = oth;
-    } catch (e) {
-    }
+    } catch (e) {}
     // const message = exception.message;
-    Logger.log(exception, "错误提示");
+    Logger.log(exception, 'Error message');
     const errorResponse = {
       status,
       message: resultMessage,
-      code: resultCode, // 自定义code
+      code: resultCode, // Custom code
       params: resultParams,
-      path: request.url, // 错误的url地址
-      method: request.method, // 请求方式
-      timestamp: new Date().toLocaleDateString() // 错误的时间
+      path: request.url, // Wrong url address
+      method: request.method, // Request method
+      timestamp: new Date().toLocaleDateString(), // Wrong time
     };
-    // 打印日志
+    // Print log
     Logger.error(
       `【${formatDate(Date.now())}】${request.method} ${request.url}`,
       JSON.stringify(errorResponse),
-      "HttpExceptionFilter"
+      'HttpExceptionFilter',
     );
-    // 设置返回的状态码、请求头、发送错误信息
+    // Set the returned status code, request header, and send error message
     response.status(status);
-    response.header("Content-Type", "application/json; charset=utf-8");
+    response.header('Content-Type', 'application/json; charset=utf-8');
     response.send(errorResponse);
   }
 }
