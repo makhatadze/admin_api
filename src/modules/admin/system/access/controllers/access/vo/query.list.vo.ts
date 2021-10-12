@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryListVo {
-  @ApiProperty({ description: "总页数" })
+  @ApiProperty({ description: 'total pages' })
   total: number;
 
-  @ApiProperty({ description: "页码" })
+  @ApiProperty({ description: 'page number' })
   pageSize: number;
 
-  @ApiProperty({ description: "当前页" })
+  @ApiProperty({ description: 'current page' })
   pageNumber: number;
 }

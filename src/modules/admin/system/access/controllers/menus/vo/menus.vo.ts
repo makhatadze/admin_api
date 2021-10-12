@@ -1,25 +1,25 @@
-import { QueryVo } from "../../../../../../../vo/query.vo";
-import { ApiProperty } from "@nestjs/swagger";
+import { QueryVo } from '@src/vo/query.vo';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class MenusListVo extends QueryVo {
-  @ApiProperty({ description: "名称" })
+  @ApiProperty({ description: 'name' })
   name: string;
 
-  @ApiProperty({ description: "小图标" })
+  @ApiProperty({ description: 'Small icon' })
   icon?: string;
 
-  @ApiProperty({ description: "url地址" })
+  @ApiProperty({ description: 'url address' })
   url: string;
 
-  @ApiProperty({ description: "针对操作的请求方式" })
+  @ApiProperty({ description: 'Request method for operation' })
   method?: string;
 
-  @ApiProperty({ description: "父模块ID" })
+  @ApiProperty({ description: 'Parent module ID' })
   parentId: number;
 
-  @ApiProperty({ description: "排序" })
+  @ApiProperty({ description: 'Sort' })
   sort: number;
 
-  @ApiProperty({ description: "描素" })
+  @ApiProperty({ description: 'Profile' })
   description?: string;
 }

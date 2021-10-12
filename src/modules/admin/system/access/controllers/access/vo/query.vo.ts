@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryVo {
-  @ApiProperty({ description: "主键id" })
+  @ApiProperty({ description: 'Primary key id' })
   id?: number;
 
-  @ApiProperty({ description: "创建时间" })
+  @ApiProperty({ description: 'Creation time' })
   createdAt?: Date;
 
-  @ApiProperty({ description: "更新时间" })
+  @ApiProperty({ description: 'Update time' })
   updatedAt?: Date;
 }

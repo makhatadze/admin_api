@@ -10,91 +10,100 @@ import {
   ParseIntPipe,
   Patch,
   Get,
-  Query
-} from "@nestjs/common";
+  Query,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiBearerAuth,
   ApiOperation,
-  ApiOkResponse
-} from "@nestjs/swagger";
-import { AuthGuard } from "../../../../../../guard/auth/auth.guard";
-import { AccessService } from "../../services/access/access.service";
-import { CreateAccessDto } from "./dto/create.access.dto";
-import { UpdateAccessDto } from "./dto/update.access.dto";
-import { AccessListVo, AccessVo } from "./vo/access.vo";
-import { AccessReqDto } from "./dto/access.req.dto";
-import { ApiAuth } from "../../../../../../decorators/api.auth";
+  ApiOkResponse,
+} from '@nestjs/swagger';
+import { AuthGuard } from '@src/guard/auth/auth.guard';
+import { AccessService } from '../../services/access/access.service';
+import { CreateAccessDto } from './dto/create.access.dto';
+import { UpdateAccessDto } from './dto/update.access.dto';
+import { AccessListVo, AccessVo } from './vo/access.vo';
+import { AccessReqDto } from './dto/access.req.dto';
+import { ApiAuth } from '@src/decorators/api.auth';
 
-@ApiTags("后台管理系统-资源管理")
+@ApiTags('Backstage management system-resource management')
 @ApiBearerAuth()
 @UseGuards(AuthGuard)
 @ApiAuth()
-@Controller("access")
+@Controller('access')
 export class AccessController {
   constructor(private readonly accessService: AccessService) {
   }
 
-  @ApiOperation({ summary: "创建资源", description: "创建资源" })
+  @ApiOperation({
+    summary: 'Create resources',
+    description: 'Create resources',
+  })
   @ApiOkResponse({
     type: String,
-    description: "创建资源返回值"
+    description: 'Create resource return value',
   })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async createAccess(
-    @Body() createAccessDto: CreateAccessDto
+    @Body() createAccessDto: CreateAccessDto,
   ): Promise<string> {
     return await this.accessService.createAccess(createAccessDto);
   }
 
-  @ApiOperation({ summary: "删除资源", description: "根据资源ID删除资源" })
-  @Delete(":id")
+  @ApiOperation({
+    summary: 'Delete resource',
+    description: 'Delete resources based on resource ID',
+  })
+  @Delete(':id')
   @HttpCode(HttpStatus.OK)
   async destroyAccessById(
-    @Param("id", new ParseIntPipe()) id: number
+    @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
     return await this.accessService.destroyAccessById(id);
   }
 
-  @ApiOperation({ summary: "修改资源", description: "根据资源ID修改资源" })
+  @ApiOperation({
+    summary: 'Modify resources',
+    description: 'Modify the resource based on the resource ID',
+  })
   @ApiOkResponse({
     type: String,
-    description: "修改资源的返回值"
+    description: 'Modify the return value of the resource',
   })
-  @Patch(":id")
+  @Patch(':id')
   async modifyAccessById(
-    @Param("id", new ParseIntPipe()) id: number,
-    @Body() updateAccessDto: UpdateAccessDto
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateAccessDto: UpdateAccessDto,
   ): Promise<string> {
     return await this.accessService.modifyAccessById(id, updateAccessDto);
   }
 
   @ApiOperation({
-    summary: "获取菜单",
-    description: "获取全部的菜单(不分页,给角色分配资源使用)"
+    summary: 'Get the menu',
+    description: 'Get all the menus (no paging, assign resources to roles)',
   })
   @ApiOkResponse({
     type: AccessVo,
     isArray: true,
-    description: "获取全部菜单返回DTO"
+    description: 'Get all menus and return to DTO',
   })
   @HttpCode(HttpStatus.OK)
-  @Get("access_list")
+  @Get('access_list')
   async accessList(): Promise<AccessVo[]> {
     return await this.accessService.accessList();
   }
 
   @ApiOperation({
-    summary: "获取资源列表",
-    description: "分页获取资源列表(顶层的)",
+    summary: 'Get a list of resources',
+    description: 'Paging to get the resource list (top level)',
     externalDocs: {
-      url: "xxx?pageSize=10&pageNumber=1"
-    }
+      url: 'xxx?pageSize=10&pageNumber=1',
+    },
   })
   @ApiOkResponse({
     type: AccessListVo,
-    description: "分页获取资源列表"
+    description: 'Get a list of resources by page',
   })
   @Get()
   async accessListPage(
